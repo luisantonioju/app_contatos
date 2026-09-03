@@ -58,7 +58,6 @@ class ListaContatosPage extends StatelessWidget {
               trailing: Icon(
                 Icons.star,
                 color: situacao ? Colors.orange : Colors.grey,
-                size: 48,
               ),
             ),
           );

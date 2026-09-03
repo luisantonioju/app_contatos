@@ -31,8 +31,8 @@ class ListaContatosPage extends StatelessWidget {
         'situacao': false,
       },
       {
-        'sigla': 'DA',
-        'titulo': 'Diego Alves',
+        'sigla': 'ET',
+        'titulo': 'Elisa Torres',
         'numero': '(14) 99221-4931',
         'situacao': false,
       },
@@ -56,9 +56,9 @@ class ListaContatosPage extends StatelessWidget {
               title: Text(tarefa['titulo']),
               subtitle: Text(tarefa['numero']),
               trailing: Icon(
-                Icons.circle,
-                color: situacao ? Colors.green : Colors.red,
-                size: 12,
+                Icons.star,
+                color: situacao ? Colors.orange : Colors.grey,
+                size: 48,
               ),
             ),
           );

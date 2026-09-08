@@ -56,9 +56,9 @@ class ListaContatosPage extends StatelessWidget {
               title: Text(tarefa['titulo']),
               subtitle: Text(tarefa['numero']),
               trailing: Icon(
-                Icons.circle,
-                color: situacao ? Colors.green : Colors.red,
-                size: 12,
+                Icons.star,
+                color: situacao ? Colors.orange : Colors.grey,
+                size: 24,
               ),
             ),
           );

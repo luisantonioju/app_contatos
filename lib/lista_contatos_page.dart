@@ -31,8 +31,8 @@ class ListaContatosPage extends StatelessWidget {
         'situacao': false,
       },
       {
-        'sigla': 'DA',
-        'titulo': 'Diego Alves',
+        'sigla': 'ET',
+        'titulo': 'Elisa Torres',
         'numero': '(14) 99221-4931',
         'situacao': false,
       },

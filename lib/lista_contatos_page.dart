@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'database_helper.dart'; // Importe o caminho correto do seu arquivo helper
+import 'database_helper.dart';
 
 class ListaContatosPage extends StatefulWidget {
   const ListaContatosPage({super.key});
@@ -25,7 +25,9 @@ class _ListaContatosPageState extends State<ListaContatosPage> {
   }
 
   void adicionarContato() {
-    final novoContatoController = TextEditingController();
+    final nomeController = TextEditingController();
+    final numeroController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) {
@@ -35,16 +37,13 @@ class _ListaContatosPageState extends State<ListaContatosPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: novoContatoController,
+                controller: nomeController,
                 decoration: InputDecoration(hintText: 'Digite o nome...'),
               ),
               TextField(
-                controller: novoContatoController,
-                keyboardType:
-                    TextInputType.phone, // Abre o teclado numérico no celular
-                decoration: const InputDecoration(
-                  hintText: 'Digite o número...',
-                ),
+                controller: numeroController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(hintText: 'Digite o número...'),
               ),
             ],
           ),
@@ -57,9 +56,11 @@ class _ListaContatosPageState extends State<ListaContatosPage> {
             ),
             TextButton(
               onPressed: () async {
-                if (novoContatoController.text.isNotEmpty) {
+                if (nomeController.text.isNotEmpty) {
+                  // Salva o nome e o número separados
                   await DatabaseHelper.inserirContato(
-                    novoContatoController.text,
+                    nomeController.text,
+                    numeroController.text,
                   );
                   carregarContatos();
 
@@ -79,58 +80,38 @@ class _ListaContatosPageState extends State<ListaContatosPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Lista de Contatos"), centerTitle: true),
+      appBar: AppBar(title: Text("Lista de Contatos"), centerTitle: true),
       body: contatos.isEmpty
           ? Center(
               child: Text('Nenhum contato ainda. Toque em + para adicionar.'),
             )
           : ListView.builder(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               itemCount: contatos.length,
               itemBuilder: (context, index) {
                 final contato = contatos[index];
-                final bool situacao =
-                    contato['situacao'] ==
-                    1; // Ajustado caso seu banco use 0 e 1 para booleano
 
-                // Pega o nome digitado pelo usuário (Ex: "Ana Souza")
-                final String nomeCompleto = contato['titulo'] ?? 'Sem Nome';
-
-                // Divide o nome por espaços e pega as primeiras letras
-                final List<String> partesNome = nomeCompleto.trim().split(' ');
-                final String sigla = partesNome.length > 1
-                    ? '${partesNome[0][0]}${partesNome[1][0]}'
-                          .toUpperCase() // Pega a primeira letra do 1º e 2º nome
-                    : partesNome[0].isNotEmpty
-                    ? partesNome[0][0].toUpperCase()
-                    : '?'; // Se for só um nome, pega só a primeira letra
+                // Pega os dados do mapa simples
+                String nome = contato['titulo'] ?? 'Sem Nome';
+                String numero = contato['numero'] ?? 'Sem Número';
 
                 return Card(
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: Colors.lightBlueAccent,
+                      backgroundColor: Colors.blue,
                       child: Text(
-                        sigla,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        nome.isNotEmpty
+                            ? (nome.split(' ').length > 1
+                                  ? nome[0].toUpperCase() +
+                                        nome.split(' ')[1][0].toUpperCase()
+                                  : nome[0].toUpperCase())
+                            : '?',
+
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    title: Text(
-                      nomeCompleto,
-                      style: TextStyle(
-                        decoration: situacao
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                      ),
-                    ),
-                    subtitle: Text(contato['numero'] ?? 'Sem número'),
-                    trailing: Icon(
-                      Icons.star,
-                      color: situacao ? Colors.orange : Colors.grey,
-                      size: 24,
-                    ),
+                    title: Text(nome),
+                    subtitle: Text(numero),
                   ),
                 );
               },
@@ -138,8 +119,7 @@ class _ListaContatosPageState extends State<ListaContatosPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: adicionarContato,
         backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

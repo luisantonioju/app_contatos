@@ -16,6 +16,7 @@ class DatabaseHelper {
           'CREATE TABLE contatos ('
           'id INTEGER PRIMARY KEY AUTOINCREMENT, '
           'titulo TEXT, '
+          'numero TEXT, ' // Adicionada a coluna para o número
           'situacao INTEGER' // 0 = false, 1 = true
           ')',
         );
@@ -35,9 +36,13 @@ class DatabaseHelper {
     return db.query('contatos'); // SELECT * FROM contatos
   }
 
-  // CREATE: Inserir um novo contato no banco
-  static Future<void> inserirContato(String titulo) async {
+  // CREATE: Inserir um novo contato no banco aceitando título e número
+  static Future<void> inserirContato(String titulo, String numero) async {
     final db = await DatabaseHelper.database;
-    await db.insert('contatos', {'titulo': titulo, 'situacao': 0});
+    await db.insert('contatos', {
+      'titulo': titulo,
+      'numero': numero,
+      'situacao': 0,
+    });
   }
 }

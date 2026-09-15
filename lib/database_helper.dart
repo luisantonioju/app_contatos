@@ -16,8 +16,9 @@ class DatabaseHelper {
           'CREATE TABLE contatos ('
           'id INTEGER PRIMARY KEY AUTOINCREMENT, '
           'titulo TEXT, '
-          'numero TEXT, ' // Adicionada a coluna para o número
-          'situacao INTEGER' // 0 = false, 1 = true
+          'numero TEXT, '
+          'sigla TEXT, '
+          'situacao INTEGER'
           ')',
         );
       },
@@ -33,15 +34,24 @@ class DatabaseHelper {
   // READ: Buscar todos os contatos salvos no banco
   static Future<List<Map<String, dynamic>>> buscarContatos() async {
     final db = await DatabaseHelper.database;
-    return db.query('contatos'); // SELECT * FROM contatos
+    return await db.query(
+      'contatos',
+    ); // SELECT * FROM contatos (já traz a sigla pronta)
   }
 
-  // CREATE: Inserir um novo contato no banco aceitando título e número
+  // CREATE: Inserir um novo contato no banco salvando titulo, numero e sigla
   static Future<void> inserirContato(String titulo, String numero) async {
     final db = await DatabaseHelper.database;
+
+    String sigla = '?';
+    if (titulo.isNotEmpty) {
+      sigla = titulo[0].toUpperCase();
+    }
+
     await db.insert('contatos', {
       'titulo': titulo,
       'numero': numero,
+      'sigla': sigla, // Salva a sigla aqui
       'situacao': 0,
     });
   }

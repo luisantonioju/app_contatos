@@ -91,27 +91,17 @@ class _ListaContatosPageState extends State<ListaContatosPage> {
               itemBuilder: (context, index) {
                 final contato = contatos[index];
 
-                // Pega os dados do mapa simples
-                String nome = contato['titulo'] ?? 'Sem Nome';
-                String numero = contato['numero'] ?? 'Sem Número';
-
                 return Card(
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundColor: Colors.blue,
                       child: Text(
-                        nome.isNotEmpty
-                            ? (nome.split(' ').length > 1
-                                  ? nome[0].toUpperCase() +
-                                        nome.split(' ')[1][0].toUpperCase()
-                                  : nome[0].toUpperCase())
-                            : '?',
-
+                        contato['sigla'] ?? '?',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    title: Text(nome),
-                    subtitle: Text(numero),
+                    title: Text(contato['titulo'] ?? ''),
+                    subtitle: Text(contato['numero'] ?? ''),
                   ),
                 );
               },
